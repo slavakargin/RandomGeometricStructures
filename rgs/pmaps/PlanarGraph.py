@@ -495,7 +495,7 @@ class PlanarGraph:
         with outer face a, b, c
         That is, outputs a sequence [v0, v1, ..., v_n], where v0 = b, v1 = c, v_n = a, and the 
         sequence satisfies certain requirements useful for building a planar embedding of the
-        graph. See Schnyder paper (1990) about realizers and refernces within. 
+        graph. See Schnyder paper (1990) about realizers and references within. 
         It is assumed that the triangulation has at least 4 vertices 
         '''
         gr = copy.deepcopy(self)

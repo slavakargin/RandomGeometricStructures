@@ -61,6 +61,11 @@ class Meander(object):
     def __hash__(self):
         return hash(self.uPairing) + 17 * hash(self.dPairing)
     
+    def size(self):
+        ''' returns n for the meander system on 2n bridges '''
+        return self.uPairing.size()
+        
+    
     def draw(self, ax = None, drawCycles = False, palette = "jet"):
         if ax == None:
             fig = plt.figure()

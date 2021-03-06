@@ -74,14 +74,14 @@ def plotDyckPath(path, ax = None, method = "upperLatticePath"):
     if ax == None:
         fig = plt.figure()
         ax = fig.add_subplot(1, 1, 1)
-        major_ticks = np.arange(0, n + 1, 1)
-        #minor_ticks = np.arange(0, 101, 5)
-        ax.set_xticks(major_ticks)
-        #ax.set_xticks(minor_ticks, minor=True)
-        ax.set_yticks(major_ticks)
-        #ax.set_yticks(minor_ticks, minor=True)
-        # And a corresponding grid
-        ax.grid(which='both')
+    major_ticks = np.arange(0, n + 1, 1)
+    #minor_ticks = np.arange(0, 101, 5)
+    ax.set_xticks(major_ticks)
+    #ax.set_xticks(minor_ticks, minor=True)
+    ax.set_yticks(major_ticks)
+    #ax.set_yticks(minor_ticks, minor=True)
+    # And a corresponding grid
+    ax.grid(which='both')
     ax.plot(X, Y)
     Z = range(n + 1)
     ax.plot(Z)
@@ -110,6 +110,17 @@ def areaDyckPath(path):
         if p[1] > y_prev:
             area += p[1] - p[0]- 1
             y_prev = p[1]
+    return area
+
+def areaMeander(mndr):
+    '''calculates the area of a meander system defined as the area 
+    of the polygone that has the Dyck path for the upper pairing
+    as its upper boundary and the reflected Dyck path for the lower
+    pairing as its lower boundary. The size of the meander is subtracted
+    for normalization, so the area of the standard meander system is 0'''
+    area = areaDyckPath(pg.prng2path(mndr.uPairing))
+    area += areaDyckPath(pg.prng2path(mndr.dPairing))
+    #area += mndr.size()
     return area
 
 def genPairings(n):
@@ -391,7 +402,8 @@ def main():
     plt.grid(True)        
     '''
     
-    '''This is for paper '''
+    '''This is for paper. It is now available as a notebook in Colab'''
+    '''
     seed = 3
     n = 5
     path1 = randomDyckPath(n, seed = seed)
@@ -411,7 +423,7 @@ def main():
     mndr = mr.Meander(prng1, prng2)
     mndr.draw(drawCycles=True)
     mr.drawAsPolygon(mndr)
-
+   '''
     
     plt.show()
     

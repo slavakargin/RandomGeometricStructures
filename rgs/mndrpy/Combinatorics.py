@@ -94,8 +94,15 @@ def areaDyckPathDistr(n):
         D[area] += 1
     return D
         
-   
-   
+def areaProperMeanderDistr(n):   
+    ''' calculate the distribution of proper meanders by area '''
+    meanders = enumPropMeanders(n)
+    D = [0] * (n*(n-1) + 1) #this is possible values for area
+    for mndr in meanders:
+        area = ut.areaMeander(mndr)
+        D[area] += 1
+    return D
+    
 '''
 For testing methods
 '''
@@ -131,7 +138,9 @@ def main():
     print(counts)
     
     '''calculate cycle length distribution for meander systems
-    and study its properties ''' 
+    and study its properties. A version of this code is available in PlayMeander
+    Notebook on Colab.''' 
+    '''
     n = 5 #n = 9 takes a rather long although reasonable time. 
     D = cycleLenDistr(n)
     print(D)
@@ -146,10 +155,13 @@ def main():
     
     print("Value of cycle distribution polynomial at -1 is ", 
           np.polyval(np.flip(D),-1))   
+    '''
     
     '''now let us study the properties of the distribution 
-    of Dyck paths by area'''
-    
+    of Dyck paths by area. 
+    A version of this code was put on the PlayMeander notebook
+    on Colab.'''
+    ''' 
     n = 5
     D = areaDyckPathDistr(n)
     print("Distribution by area: ", D)
@@ -159,7 +171,17 @@ def main():
     Y = [z.imag for z in rts]
     plt.figure()
     plt.scatter(X, Y, color = "red")
-     
+    ''' 
+    
+    #Let us look on distribution of proper meanders by area
+    n = 5 #n = 6 is already pretty tough 
+    #(possible but takes some time to complete)
+    meanders = enumPropMeanders(n)
+    print("Number of proper meanders of size ", n, 
+          " is ", len(meanders))
+    D = areaProperMeanderDistr(n)
+    print(D)
+    
     plt.show()
 
 if __name__ == '__main__':

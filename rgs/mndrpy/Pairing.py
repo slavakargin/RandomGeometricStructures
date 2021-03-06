@@ -69,33 +69,48 @@ class Pairing(object):
     def __hash__(self):
         return hash(tuple(self.prng))
     
-    def draw(self, ax = None, up = True):
+    def size(self):
+        '''return n for a pairing on 2n objects '''
+        return len(self.prng)//2
+    
+    def draw(self, ax = None, up = True, asPath = False):
+        ''' draws the pairing. 
+        If up is False, then draws it in the lower half-plane.
+        If asPath is true, draws it as the corresponding Dyck path.
+        '''
         
         if ax == None:
             fig = plt.figure()
             ax = fig.add_subplot(1, 1, 1)
         
-        width = len(self.prng)
-        ax.set_xlim(0, width)
-        ax.set_ylim(-width/2, width/2)
-        
-        if up:
-            theta1 = 0.0
-            theta2 = 180.0
-        else:
-            theta1 = 180.0
-            theta2 = 360.0
-        for i in range(width):
-            j = self.prng[i]
-            xy = (i + (j - i)/2, 0)
-            w = np.abs((j - i)/2)
-            #print("i = " + str(i) + " j = " + str(j) + " xy = " + str(xy) 
-            #      + " w = " + str(w))
-            arc = mpatches.Arc(xy, 2*w, 2*w, 0, theta1, theta2)
-            ax.add_patch(arc)
-        #ax.grid(True)
-        ax.xaxis.set_ticks(np.arange(0,width))
-        ax.yaxis.set_ticks(np.arange(-width/2 + 1,width/2 , width/2 - 1))
+        if not asPath:
+            width = len(self.prng)
+            ax.set_xlim(0, width)
+            ax.set_ylim(-width/2, width/2)
+            
+            if up:
+                theta1 = 0.0
+                theta2 = 180.0
+            else:
+                theta1 = 180.0
+                theta2 = 360.0
+            for i in range(width):
+                j = self.prng[i]
+                xy = (i + (j - i)/2, 0)
+                w = np.abs((j - i)/2)
+                #print("i = " + str(i) + " j = " + str(j) + " xy = " + str(xy) 
+                #      + " w = " + str(w))
+                arc = mpatches.Arc(xy, 2*w, 2*w, 0, theta1, theta2)
+                ax.add_patch(arc)
+            #ax.grid(True)
+            ax.xaxis.set_ticks(np.arange(0,width))
+            ax.yaxis.set_ticks(np.arange(-width/2 + 1,width/2 , width/2 - 1))
+        else: 
+            path = prng2path(self)
+            if up:
+                ut.plotDyckPath(path, ax)
+            else:
+                ut.plotDyckPath(path, ax, method = "lowerLatticePath")
         pass
 
 def randomPairing(n, w = None, seed = None):
@@ -247,6 +262,7 @@ def main():
     #prng = randomCrossPairing(n)
     #prng = smallRainbows([2,3],[1,4])
     print(prng.prng)
+    print("Size is ", prng.size())
     prng.draw()
     
     path = prng2path(prng)

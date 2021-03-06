@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 
 import rgs.mndrpy.Pairing as pr
 import rgs.mndrpy.ElementTL as tl
+import rgs.mndrpy.Utility as ut
 
 def simplify(prng):
     ''' This is the first step to write the pairing in a normal form when 
@@ -28,8 +29,28 @@ def simplify(prng):
     for i in range(N):
         if prng.prng[i] == i + 1:
             ringlets.append(i)
-    #find the first ringlet with positive depth
-    x = None
+    #find depths of ringlets (it is easier to do it using the path 
+    #representation of the pairing
+    path = pr.prng2path(prng)
+    x = 0
+    y = 0
+    S = [(x, y)] #these are the points on the Dyck path.
+    for i in range(N):
+        if path[i] == 1:
+            y += 1
+        else:
+            x += 1
+        S.append((x,y))
+    depths = [0] * len(ringlets)
+    for i in range(len(ringlets)):
+        s = ringlets[i]
+        depths[i] = S[s + 1][1] - S[s + 1][0] - 1
+    #print("Depths are ", depths)
+    #find the first ringlet with the largest depth
+    max_depth = max(depths)
+    i = depths.index(max_depth)
+    x = ringlets[i]
+    '''
     depth = 0
     for i in range(len(ringlets)):
         if i == 0 and ringlets[i] > 0:
@@ -43,9 +64,10 @@ def simplify(prng):
             break
         else: 
             continue
+    '''
     #now we calculate the simplified pairing, assuming that 
-    #there is a non-trivial ringlet
-    if x != None:
+    #there is a ringlet with positive depth
+    if max_depth > 0:
         prng_copy = list(prng.prng)
         y = prng.prng[x - 1]
         prng_copy[x - 1] = x 
@@ -56,7 +78,7 @@ def simplify(prng):
     else:
         prngS = None  
     
-    return (ringlets, x, depth, prngS)
+    return (ringlets, x, max_depth, prngS)
 
 def normalForm(prng):
     ''' calculate the normal form of the pairing as defined in the 
@@ -68,7 +90,7 @@ def normalForm(prng):
     prngS = pr.Pairing(prngArray = prng.prng)
     while prngS != None:
         _, x, depth, prngS = simplify(prngS)
-        #print(ringlets, x, depth, prngS)
+        #print(x, depth, prngS)
         if prngS != None:
             nf.append((x,depth))
     return nf
@@ -161,11 +183,24 @@ def main():
     prng.draw()
     print(prng)
     
-        
-    ringlets, x, depth, prng = simplify(prng)
-    print(ringlets, x, depth, prng)
-    if prng != None:
-        prng.draw()
+    path = pr.prng2path(prng)
+    ut.plotDyckPath(path)
+    '''
+    y = 0
+    S = [(x, y)]
+    for i in range(2 * n):
+        if path[i] == 1:
+            y += 1
+        else:
+            x += 1
+        S.append((x,y))
+    print(S)
+    '''    
+    ringlets, x, depth, prng1 = simplify(prng)
+    print(ringlets, x, depth, prng1)
+    if prng1 != None:
+        prng1.draw()
+    
     
     nf = normalForm(prng)
     print(nf)
@@ -176,15 +211,20 @@ def main():
     
     prng.draw()
     
-    n = 3
-    q = 2
-    x = 3
-    m = 1
+
+    
+    n = 3 #size of the pairing
+    q = 2 #parameter of the algebra
+    x = 3 #place to act
+    m = 1 
     #vacuum element:
     prng = pr.standardPairing(n) 
     #another element created by acting with e_x on the vacuum element
     prng1 = act(x,prng)
-    prng1.draw()
+    prng1.draw(asPath = True)
+    
+    
+    '''
     el1 = tl.ElementTL({prng:1}, q = q) #basis element as a part of the TL algebra
     #now we create another element by acting by a different version of e_x on 
     #the vacuum vector. 
@@ -201,7 +241,7 @@ def main():
     el3 = act2(x - 2, m, q, el2)
     print(el3)
 
-    
+    '''
     plt.show()
 
 
