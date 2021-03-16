@@ -10,8 +10,8 @@ import matplotlib.patches as mpatches
 from matplotlib import cm
 
 import rgs.mndrpy.Pairing as pr
-import rgs.mndrpy.Utility as ut
-
+#import rgs.mndrpy.Utility as ut
+import rgs.mndrpy.DyckPaths as dp
 
 class Meander(object):
     '''
@@ -66,14 +66,17 @@ class Meander(object):
         return self.uPairing.size()
         
     
-    def draw(self, ax = None, drawCycles = False, palette = "jet"):
+    def draw(self, ax = None, drawCycles = False, palette = "jet", 
+             asPolygon = False):
         if ax == None:
             fig = plt.figure()
             ax = fig.add_subplot(1, 1, 1)
         fig = ax.figure
-        self.uPairing.draw(ax = ax)
-        self.dPairing.draw(ax = ax, up = False)
-        if drawCycles == True:
+        self.uPairing.draw(ax = ax, asPath = asPolygon)
+        self.dPairing.draw(ax = ax, up = False, asPath = asPolygon)
+        if asPolygon:
+            ax.grid(which='both')
+        if drawCycles and not asPolygon:
             colormap = cm.get_cmap(palette, 128)
             cycles, _ = self.findCycles()
             for i in range(len(cycles)):
@@ -123,8 +126,9 @@ class Meander(object):
             return False
         
     def  isIrreducible(self):
-        '''checks if the meander is irreducible. (It is somewhat different
-        then irreducible meanders in the sense of Zvonkin-Lando.)'''
+        '''checks if the meander is irreducible. (NB. The definition is different
+        from irreducible meanders in the sense of Zvonkin-Lando, so it is
+        more of exploratory nature.)'''
         if self.isProper():
             return True   
         cycles, _ = self.findCycles()
@@ -187,6 +191,16 @@ class Meander(object):
             lengths.append(len(cycle))
         return lengths
         
+def areaMeander(mndr):
+    '''calculates the area of a meander system defined as the area 
+    of the polygone that has the Dyck path for the upper pairing
+    as its upper boundary and the reflected Dyck path for the lower
+    pairing as its lower boundary. The size of the meander is subtracted
+    for normalization, so the area of the standard meander system is 0'''
+    area = dp.areaDyckPath(pr.prng2path(mndr.uPairing))
+    area += dp.areaDyckPath(pr.prng2path(mndr.dPairing))
+    #area += mndr.size()
+    return area
          
 def randomMeander(n, w = None, seed = None):
     ''' generates a uniformly random meander on half-length n.
@@ -264,9 +278,9 @@ def drawAsPolygon(mndr):
     is represented by a Dyck path below the main diagonal. 
     '''
     upath = pr.prng2path(mndr.uPairing)
-    ax = ut.plotDyckPath(upath)
+    ax = dp.plotDyckPath(upath)
     dpath = pr.prng2path(mndr.dPairing)
-    ax = ut.plotDyckPath(dpath, ax = ax, method = "lowerLatticePath")
+    ax = dp.plotDyckPath(dpath, ax = ax, method = "lowerLatticePath")
     return ax    
     
 '''

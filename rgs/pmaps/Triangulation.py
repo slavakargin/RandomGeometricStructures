@@ -1,16 +1,18 @@
 '''
 Created on Jul 11, 2020
 
+A class encapsulating a triangulation and associated functions.
+
 @author: vladislavkargin
 '''
 
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
-from matplotlib import cm
+#from matplotlib import cm
 
 import copy
-import math
+#import math
 import numpy as np
 
 import rgs.pmaps.OrderedTree as ot
@@ -20,17 +22,16 @@ import rgs.pmaps.PlanarGraph as pg
 
 class Triangulation(object):
     '''
-    An object that represent a triangulation. Its an specialization of the planar graph
-    so many of its functionality is provided by the PlanarGraph object.
+    An object that represent a triangulation. It is a specialization of the planar graph
+    so much of its functionality is provided by the PlanarGraph object.
     '''
 
 
     def __init__(self, tree = None):
         '''
-        Constructor
         If tree is available buils the triangulation from the tree 
         using a variant of the Poulalhon-Scheffer method, 
-        else builds the triangulation that consists of 3 vertices.
+        else builds a trivial triangulation that consists of 3 vertices.
         '''
         if tree != None:
             self.graph = pg.buildTriangulation(tree)
@@ -48,7 +49,8 @@ class Triangulation(object):
     
             
     def __eq__(self, other):
-        """Overrides the default implementation"""
+        """Overrides the default implementation. Triangulations are
+        the same if their realizers are the same."""
         if isinstance(other, Triangulation):
             if self.realizer == other.realizer: #realizers are same
                 return True
@@ -60,6 +62,7 @@ class Triangulation(object):
         return hash(str(self.realizer))
     
     
+
     def canonLabelling(self):
         '''
         build a canonical labelling for a maximal planar graph (that is, for a triangulation)
@@ -67,11 +70,11 @@ class Triangulation(object):
         That is, outputs a sequence [v0, v1, ..., v_n], where v0 = b, v1 = c, v_n = a, and the 
         sequence satisfies certain requirements useful for building a planar embedding of the
         graph. See Schnyder paper (1990) about realizers and references within. 
-        It is assumed that the triangulation has at least 4 vertices 
-        TODO: I should enhance this by renaming so that the root was 0, arrowRoot 1 and 
-        the remaining vertex on the boundary 2. Perhaps it should be done in a separate 
-        method. 
+        It is assumed that the triangulation has at least 4 vertices  
         '''
+        #TODO: I should enhance this by renaming so that the root was 0, arrowRoot 1 and 
+        #the remaining vertex on the boundary 2. Perhaps it should be done in a separate 
+        #method.
         gr = copy.deepcopy(self.graph)
         V = gr.V
         seq = [0] * V

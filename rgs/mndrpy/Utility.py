@@ -11,117 +11,31 @@ import os
 import rgs.pmaps.OrderedTree as ot
 import rgs.mndrpy.Pairing as pg
 import rgs.mndrpy.Meander as mr
+import rgs.mndrpy.DyckPaths as dp
 
     
-def randomDyckPath(n, seed = None):
+def cyclesOfPerm(perm):
+    ''' calculates all cycles in the permutation. 
+    For, example if the permutation is 102534, then return a list of 
+    [01][2][354]. Currently, the order of cycles and the order inside cycles are NOT
+    normalized to the standard order defined in Ennumerative Combinatorics by Stanley.
     '''
-     * Generates a random Dyck path with 2n steps
-     * 
-     * @param n half-size of path
-     * @return a sequence of -1 and 1 steps.
-    '''
-    
-    if seed != None:
-        np.random.seed(seed)
-    path = [1] * n + [-1] * (n + 1)   
-    #shuffle randomly
-    np.random.shuffle(path)
-    
-    #do a cyclic shift. 
-    #Find the first occurrence of the minimum
-    S = np.cumsum(np.array([0] + path))
-    '''
-    fig1, ax1 = plt.subplots(nrows=1, ncols=1)
-    ax1.plot(S)
-    ax1.grid(True)
-    '''
-    m = np.min(S)
-    positions = np.where(S == m)[0]
-    pos = positions[0]
-    #print(pos)
-    path1 = path[pos:] + path[:pos]
-    del path1[-1]
-    return path1
-
-def plotDyckPath(path, ax = None, method = "upperLatticePath"):
-    ''' plots a Dyck path. Path is either list of 1, -1 or numpy array
-    of 1, - 1'''
-    if isinstance(path, list):
-        n = int(len(path)/2)
-    else:
-        n = int(path.shape[0]/2)
-    x = 0
-    y = 0
-    S = [(x, y)]
-    if method == "upperLatticePath":
-        for i in range(2 * n):
-            if path[i] == 1:
-                y += 1
-            else:
-                x += 1
-            S.append((x,y))
-    else:         
-        for i in range(2 * n):
-            if path[i] == 1:
-                x += 1
-            else:
-                y += 1
-            S.append((x,y))
-    #print(S)
-    X, Y = list(zip(*S)) 
-    #print(X)
-    #print(Y)
-    if ax == None:
-        fig = plt.figure()
-        ax = fig.add_subplot(1, 1, 1)
-    major_ticks = np.arange(0, n + 1, 1)
-    #minor_ticks = np.arange(0, 101, 5)
-    ax.set_xticks(major_ticks)
-    #ax.set_xticks(minor_ticks, minor=True)
-    ax.set_yticks(major_ticks)
-    #ax.set_yticks(minor_ticks, minor=True)
-    # And a corresponding grid
-    ax.grid(which='both')
-    ax.plot(X, Y)
-    Z = range(n + 1)
-    ax.plot(Z)
-    return ax  
-
-
-def areaDyckPath(path):
-    ''' calculate the area of the Dyck path, defined as the number
-    of unit squares under the path but above the line y = x'''
-    if isinstance(path, list):
-        n = int(len(path)/2)
-    else:
-        n = int(path.shape[0]/2)
-    x = 0
-    y = 0
-    S = [(x, y)]
-    for i in range(2 * n):
-        if path[i] == 1:
-            y += 1
-        else:
-            x += 1
-        S.append((x,y))
-    area = 0
-    y_prev = 0
-    for p in S: #every time as y increases, we add y - x - 1 to the area
-        if p[1] > y_prev:
-            area += p[1] - p[0]- 1
-            y_prev = p[1]
-    return area
-
-def areaMeander(mndr):
-    '''calculates the area of a meander system defined as the area 
-    of the polygone that has the Dyck path for the upper pairing
-    as its upper boundary and the reflected Dyck path for the lower
-    pairing as its lower boundary. The size of the meander is subtracted
-    for normalization, so the area of the standard meander system is 0'''
-    area = areaDyckPath(pg.prng2path(mndr.uPairing))
-    area += areaDyckPath(pg.prng2path(mndr.dPairing))
-    #area += mndr.size()
-    return area
+    cycles = []
+    elements = list(range(len(perm)))
+    while len(elements) > 0:
+        cycle = []
+        i = elements[0]
+        elements.remove(i)
+        cycle.append(i)
+        j = perm[i]
+        while j != i:
+            elements.remove(j)
+            cycle.append(j)
+            j = perm[j]
+        cycles.append(cycle)
+    return cycles
+        
+        
 
 def genPairings(n):
     '''This is a generator that yields all (non-crossing) Pairings on [2n].
@@ -424,6 +338,21 @@ def main():
     mndr.draw(drawCycles=True)
     mr.drawAsPolygon(mndr)
    '''
+    seed = 3
+    n = 10
+    path1 = dp.randomDyckPath(n, seed = seed)
+    dp.plotDyckPath(path1)
+    area = dp.areaDyckPath(path1)
+    print("Area of path1 is ", area)  
+    nvalleys = dp.nvalleysDyckPath(path1)
+    print("Number of valleys is ", nvalleys)
+    
+    n = 4
+    np.random.seed()
+    perm = np.random.permutation(n)
+    print(perm)
+    cycles = cyclesOfPerm(perm) 
+    print(cycles)
     
     plt.show()
     

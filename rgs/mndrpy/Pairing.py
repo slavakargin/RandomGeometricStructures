@@ -11,6 +11,7 @@ import matplotlib.patches as mpatches
 
 
 import rgs.mndrpy.Utility as ut
+import rgs.mndrpy.DyckPaths as dp
 #import mndrpy.ElementTL as tl
 
 
@@ -108,9 +109,9 @@ class Pairing(object):
         else: 
             path = prng2path(self)
             if up:
-                ut.plotDyckPath(path, ax)
+                dp.plotDyckPath(path, ax)
             else:
-                ut.plotDyckPath(path, ax, method = "lowerLatticePath")
+                dp.plotDyckPath(path, ax, method = "lowerLatticePath")
         pass
 
 def randomPairing(n, w = None, seed = None):
@@ -118,7 +119,7 @@ def randomPairing(n, w = None, seed = None):
     If w != None, then generates a pairing from a Galton-Watson tree
     with weight sequence w'''
     if w == None:
-        path = ut.randomDyckPath(n, seed = seed)
+        path = dp.randomDyckPath(n, seed = seed)
     else:
         tree = ut.randomTree(n + 1, w, seed = seed)
         path = ut.treeToDyckPath(tree)
@@ -267,7 +268,7 @@ def main():
     
     path = prng2path(prng)
     print(path)
-    ut.plotDyckPath(path)
+    dp.plotDyckPath(path)
     
    
     #newPrng = addCrossing(prng, 0, 1)

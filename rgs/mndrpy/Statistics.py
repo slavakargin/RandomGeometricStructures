@@ -5,8 +5,10 @@ Created on Jul 25, 2020
 '''
 import rgs.mndrpy.Meander as Meander
 import rgs.mndrpy.Utility as ut
+import rgs.mndrpy.DyckPaths as dp
 
 import numpy as np
+import scipy.stats as stats
 import matplotlib.pyplot as plt
 
 from scipy.stats import skew
@@ -367,6 +369,42 @@ def histLargestCycleSpacing(n, beta = 1, ITER = 10000, bins = 30,
     ax2.legend()
     ''' 
     
+def histAreaDyckPaths(n, ITER = 10000, bins = None, seed = None, density = False):
+    '''plot the histogram of the area distribution'''
+    areas = np.zeros(ITER)
+    for i in range(ITER):
+        path = dp.randomDyckPath(n, seed = seed)
+        area = dp.areaDyckPath(path)
+        areas[i] = area
+    _, ax1 = plt.subplots(nrows=1, ncols=1)
+    if bins != None:
+        ax1.hist(areas, bins = bins, density = density)
+    else: 
+        ax1.hist(areas, density = density)
+
+def histValleysDyckPaths(n, ITER = 10000, bins = None, seed = None, density = False):
+    '''plot the histogram of the number of valleys distribution'''
+    statistics = np.zeros(ITER)
+    for i in range(ITER):
+        path = dp.randomDyckPath(n, seed = seed)
+        statistic = dp.nvalleysDyckPath(path)
+        statistics[i] = statistic
+    _, ax1 = plt.subplots(nrows=1, ncols=1)
+    if bins != None:
+        ax1.hist(statistics, bins = bins, density = density)
+    else: 
+        ax1.hist(statistics, density = density)
+
+def corrValleysAreasDP(n, ITER = 1000):
+    areas = np.zeros(ITER)
+    nvalleys = np.zeros(ITER)
+    for i in range(ITER):
+        path = dp.randomDyckPath(n)
+        areas[i] = dp.areaDyckPath(path)
+        nvalleys[i] = dp.nvalleysDyckPath(path)
+    corr = stats.pearsonr(areas, nvalleys)
+    print('Correlation between area under the Dyck path and the n of valleys is'
+          , corr)
 '''
 For testing methods
 '''
@@ -375,6 +413,7 @@ def main():
     
     '''Plotting a picture of growth in the length of the largest cycle 
     depending on meander half-size n'''
+    '''
     Nmin = 10
     Nmax = 200  #target 2000
     ticks_step = 100
@@ -383,6 +422,7 @@ def main():
     methods = ["CrossSemi"]
     
     plotMeanAndStdLargestCycle(Nmin, Nmax, ITER, ticks_step = ticks_step, methods = methods)
+    '''
     
     '''Plotting the distribution of cycle lengths in a large meander system'''
     #n = 100000
@@ -461,6 +501,16 @@ def main():
     plotLargestClusterSize(Nmin, Nmax, max_gap_size = max_gap_size, 
                            ITER = ITER)
     '''
+    
+    n = 200
+    bins = 40
+    ITER = 30000
+    histAreaDyckPaths(n, ITER = ITER, bins = bins)
+    
+    histValleysDyckPaths(n, ITER = ITER, bins = bins)
+    
+    corrValleysAreasDP(n, ITER = ITER)
+    
     
     plt.show()  
 

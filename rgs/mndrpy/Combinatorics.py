@@ -6,9 +6,10 @@ Created on Aug 14, 2020
 import rgs.mndrpy.Meander as Meander
 import rgs.mndrpy.Utility as ut
 import rgs.mndrpy.Pairing as pg
+import rgs.mndrpy.DyckPaths as dp
 
 
-import numpy as np
+#import numpy as np
 import itertools 
 import matplotlib.pyplot as plt
 #from progress.bar import Bar
@@ -26,6 +27,9 @@ def enumPropMeanders(n):
 
 def enumIrrMeanders(n):
     ''' enumerates irreducible Meanders on [2n]. (Obviously, n cannot be too large.)
+    NB. The definition that I use is different from the definition used by Zvonkin-Lando,
+    in their paper about meanders,  
+    so this is more of exploratory character.
     '''
     meanders = set([])
     for uPrng in ut.genPairings(n):
@@ -59,7 +63,7 @@ def rotationNumber(cycle):
     
 def rnDistribution(n):
     ''' Calculates the distribution of rotation numbers for all cycles of length 
-    2n '''
+    2n. Returns the counts as a dictionary'''
     counts = {}
     for cycle in itertools.permutations(range(1,2 * n)):
         cycle2 = [0] + list(cycle)
@@ -71,8 +75,8 @@ def rnDistribution(n):
             counts[rn] = 1
     return counts
 
-def cycleLenDistr(n):
-    ''' calculates the distribution of meander systems over cycle lengths 
+def cycleNumDistrMeanders(n):
+    ''' calculates the distribution of meander systems over the number of cycles
     (exactly). Returns smth like [8 12 5] which means 8 meander systems with 
     only one cycle (proper meanders), 12 - with two cycles and 5 with 3 cycles'''
     
@@ -83,6 +87,21 @@ def cycleLenDistr(n):
         D[c - 1] = D[c - 1] + 1
     return D
     
+def cycleNumDistr231perm(n):
+    ''' calculates the distribution of 231-avoiding permutations
+     over the number of cycles (exactly).'''
+    #TODO
+    
+    D = [0] * n
+    for prng in ut.allPairings(n):
+        path = pg.prng2path(prng)
+        perm = dp.pathTo231perm(path)
+        cycles = ut.cyclesOfPerm(perm)
+        c = len(cycles)
+        D[c - 1] = D[c - 1] + 1
+    return D
+    
+    
 def areaDyckPathDistr(n):
     ''' calculate the distribution of all Dyck Paths by area (Carlitz'
     variant of q-Catalan numbers)'''
@@ -90,7 +109,7 @@ def areaDyckPathDistr(n):
     D = [0] * (n*(n-1)//2 + 1) #this is possible values for area
     for prng in ut.allPairings(n):
         path = pg.prng2path(prng)
-        area = ut.areaDyckPath(path)
+        area = dp.areaDyckPath(path)
         D[area] += 1
     return D
         
@@ -99,7 +118,9 @@ def areaProperMeanderDistr(n):
     meanders = enumPropMeanders(n)
     D = [0] * (n*(n-1) + 1) #this is possible values for area
     for mndr in meanders:
-        area = ut.areaMeander(mndr)
+        area = Meander.areaMeander(mndr)
+        #if area == (n - 1)**2:
+        #    mndr.draw(asPolygon = True)
         D[area] += 1
     return D
     
@@ -137,6 +158,13 @@ def main():
     counts = rnDistribution(n) #6 is max that it can do in reasonable time
     print(counts)
     
+    #now let us calculate the distribution over the number of cycles 
+    #for 231 avoiding permutations. 
+    n = 4
+    counts = cycleNumDistr231perm(n)
+    print(counts)
+    
+    
     '''calculate cycle length distribution for meander systems
     and study its properties. A version of this code is available in PlayMeander
     Notebook on Colab.''' 
@@ -173,14 +201,19 @@ def main():
     plt.scatter(X, Y, color = "red")
     ''' 
     
-    #Let us look on distribution of proper meanders by area
-    n = 5 #n = 6 is already pretty tough 
+    '''
+    Let us look on distribution of proper meanders by area.
+    This was put up on Colab
+    '''
+    '''
+    n = 3 #n = 6 is already pretty tough 
     #(possible but takes some time to complete)
     meanders = enumPropMeanders(n)
     print("Number of proper meanders of size ", n, 
           " is ", len(meanders))
     D = areaProperMeanderDistr(n)
     print(D)
+    '''
     
     plt.show()
 
