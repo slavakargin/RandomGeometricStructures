@@ -1,8 +1,9 @@
 [tool.poetry]
 name = "rgs"
-version = "0.1.5"
+version = "0.1.6"
 description = "A small package to display and manipulate random geometry structures like pairings, meanders, triangulations and tilings."
 authors = ["Vladislav Kargin <slavakargin@yahoo.com>"]
+url = https://github.com/slavakargin/RandomGeeometricStructures
 license = "MIT"
 readme = "README.md"
 
