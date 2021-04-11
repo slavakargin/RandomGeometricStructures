@@ -12,30 +12,9 @@ import rgs.pmaps.OrderedTree as ot
 import rgs.mndrpy.Pairing as pg
 import rgs.mndrpy.Meander as mr
 import rgs.mndrpy.DyckPaths as dp
-
+import rgs.mndrpy.Combinatorics as cmb
     
-def cyclesOfPerm(perm):
-    ''' calculates all cycles in the permutation. 
-    For, example if the permutation is 102534, then return a list of 
-    [01][2][354]. Currently, the order of cycles and the order inside cycles are NOT
-    normalized to the standard order defined in Ennumerative Combinatorics by Stanley.
-    '''
-    cycles = []
-    elements = list(range(len(perm)))
-    while len(elements) > 0:
-        cycle = []
-        i = elements[0]
-        elements.remove(i)
-        cycle.append(i)
-        j = perm[i]
-        while j != i:
-            elements.remove(j)
-            cycle.append(j)
-            j = perm[j]
-        cycles.append(cycle)
-    return cycles
-        
-        
+   
 
 def genPairings(n):
     '''This is a generator that yields all (non-crossing) Pairings on [2n].
@@ -351,7 +330,7 @@ def main():
     np.random.seed()
     perm = np.random.permutation(n)
     print(perm)
-    cycles = cyclesOfPerm(perm) 
+    cycles = cmb.cyclesOfPerm(perm) 
     print(cycles)
     
     plt.show()

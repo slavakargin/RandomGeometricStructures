@@ -6,8 +6,8 @@ Created on Jan 23, 2021
 import numpy as np
 import matplotlib.pyplot as plt
 
-import ribbons.Ribbon as rb
-import ribbons.Tiling as tl
+import rgs.ribbons.Ribbon as rb
+import rgs.ribbons.Tiling as tl
 
 def fibSequence(n, seed = None):
     ''' returns a random increasing sequence of indices (i1, i2, ..., ik)

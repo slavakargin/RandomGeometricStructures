@@ -6,7 +6,7 @@ Created on Jan 20, 2021
 
 import numpy as np
 import matplotlib.pyplot as plt
-import ribbons.Ribbon as rb
+import rgs.ribbons.Ribbon as rb
 
 class Tiling(object):
     '''
@@ -60,7 +60,7 @@ def main():
     ribbon2 = rb.Ribbon(0, 1, [1, 0])
     
     tiling = Tiling([ribbon1, ribbon2]) 
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     print(tiling)
     tiling.draw(10, 10, ax = ax)
     plt.show()

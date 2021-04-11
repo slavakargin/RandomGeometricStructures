@@ -157,10 +157,10 @@ For testing methods
 '''
 def main():
     
-    n = 10
-    seed = 123
+    n = 5
+    seed = 3
     path = randomDyckPath(n, seed = seed)
-    plotDyckPath(path, method = 'lowerLatticePath')
+    plotDyckPath(path, method = 'upperLatticePath')
     perm = pathTo231perm(path)
     print(perm)
     

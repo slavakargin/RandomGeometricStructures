@@ -16,7 +16,7 @@ However, the resetting is not yet implemented.
 try:
     import matplotlib.pyplot as plt
     import matplotlib.lines as mlines
-    import matplotlib.patches as mpatches
+#    import matplotlib.patches as mpatches
     from matplotlib import cm
     possibleToDraw = True
 except ImportError:
@@ -192,7 +192,7 @@ class PlanarGraph:
         self.adj[v].remove(u)
        
     def removeVertex(self, v):
-        '''
+        ''' 
         returns graph in which vertex v and all edges adjacent to it are removed.
         The assumption is 
         that it is not a root or rootArrow
@@ -255,7 +255,7 @@ class PlanarGraph:
         Alist = [];
         for v in range(self.V):
             equation = []
-            for i in range(self.V):
+            for _ in range(self.V):
                 equation.append(0)
             equation[v] = 1
             if v not in nailedVs: #the equations are non-trivial only for these vertices
@@ -869,7 +869,7 @@ class PlanarGraph:
         dual.root = b
         dual.rootArrow = a
         dlgr2 = dual.removeVertex(0)
-        fig, ax = dlgr2.draw(drawLabels = False, calculateRepr = "drawCircles")
+        _, _ = dlgr2.draw(drawLabels = False, calculateRepr = "drawCircles")
                 
 
     def draw(self, title = '', drawLabels = False, block = False, root = -1, 
@@ -935,7 +935,7 @@ class PlanarGraph:
             self.calcKoebeRepr()
             #print(self.R)
         elif calculateRepr == "Schnyder":
-            X = self.calcSchnyderRepr()
+            _ = self.calcSchnyderRepr()
             
         
         if (ax == None):
@@ -1386,7 +1386,7 @@ def main():
     #seed = 123
     seed = 0 #random, that is, changes from time to time  
     trngl, _ = tr.randomTriangulation(n, seed)
-    _, ax = trngl.graph.draw(drawLabels = False, calculateRepr = "drawCircles")
+    _, _ = trngl.graph.draw(drawLabels = False, calculateRepr = "drawCircles")
     trngl.graph.dualGraph()  
     trngl.graph.drawNiceDualGraph()
     
@@ -1398,7 +1398,7 @@ def main():
     '''  
     (It seems that there is a memory leak somewhere. If the program is left 
     for a long time with plots open, then
-    it eats all the computer memory. It may be a problem of matplotlib.)
+    it eats all the computer memory.)
     '''
     
 if __name__ == "__main__":
