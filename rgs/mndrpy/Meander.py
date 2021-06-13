@@ -64,7 +64,12 @@ class Meander(object):
     def size(self):
         ''' returns n for the meander system on 2n bridges '''
         return self.uPairing.size()
-        
+     
+    def reflected(self):
+        '''returns a meander with lower and upper pairings exchanged
+        '''     
+        new_mndr = Meander(uPairing = self.dPairing, dPairing = self.uPairing)
+        return new_mndr
     
     def draw(self, ax = None, drawCycles = False, palette = "jet", 
              asPolygon = False):
@@ -339,6 +344,7 @@ def main():
     mndr.drawCycle(cycles[i], ax = ax)
     
     drawAsPolygon(mndr)
+    drawAsPolygon(mndr.reflected())
     
     plt.show()
 

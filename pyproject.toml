@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rgs"
-version = "0.1.7"
+version = "0.1.9"
 description = "A small package to display and manipulate random geometry structures like pairings, meanders, triangulations and tilings."
 authors = ["Vladislav Kargin <slavakargin@yahoo.com>"]
 homepage = ""
@@ -13,6 +13,8 @@ documentation = ""
 [tool.poetry.dependencies]
 python = "^3.7"
 numdifftools = "*"
+"itu.algs4" = "*"
+numpy = "*"
 
 [tool.poetry.dev-dependencies]
 

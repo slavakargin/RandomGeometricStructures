@@ -90,17 +90,31 @@ def areaDyckPath(path):
             y_prev = p[1]
     return area
 
-def nvalleysDyckPath(path):
-    '''counts the number of valleys of the given Dyck path '''
+def valleys(path):
+    '''counts the number of valleys of the given Dyck path,
+    and the list of valleys '''
     if isinstance(path, list):
         n = len(path)//2 
     else:
         n = path.shape[0]//2
-    nvalleys = 0
+    valleys = []
     for i in range(2 * n - 1):
         if path[i] == - 1 and path[i + 1] == 1:
-            nvalleys += 1
-    return nvalleys
+            valleys.append(i)
+    return valleys
+
+def peaks(path):
+    '''find peaks of the given Dyck path,
+    and returns their list'''
+    if isinstance(path, list):
+        n = len(path)//2 
+    else:
+        n = path.shape[0]//2
+    peaks = []
+    for i in range(2 * n - 1):
+        if path[i] == 1 and path[i + 1] == -1:
+            peaks.append(i)
+    return peaks
 
 
 def buildPlanePath(path, method = 'upperLatticePath'):
@@ -160,6 +174,9 @@ def main():
     n = 5
     seed = 3
     path = randomDyckPath(n, seed = seed)
+    peaks = peaks(path)
+    print(path)
+    print(peaks)
     plotDyckPath(path, method = 'upperLatticePath')
     perm = pathTo231perm(path)
     print(perm)

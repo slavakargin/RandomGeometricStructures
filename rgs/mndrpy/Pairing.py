@@ -40,6 +40,7 @@ class Pairing(object):
             self.prng = tuple(prngArray)
             return
         
+        path = list(path)
         self.prng = []
         if path != None:
             stack = []
@@ -52,7 +53,7 @@ class Pairing(object):
                     self.prng[i] = j;
                     self.prng[j] = i;    
         self.prng = tuple(self.prng)
-        self.crossM = None #if the matrix is crossing this should be calculated
+        #self.crossM = None #if the matrix is crossing this should be calculated
         #separately
         
     def __str__(self):
@@ -144,11 +145,12 @@ def randomCrossPairing(n, seed = None):
         prngArray[b] = a
     return Pairing(prngArray = prngArray)
 
-def calcCrossM(self):
-    ''' calculate crossing matrix '''
-    #TODO
-    N = len(self.prng)
-    self.crossM = np.zeros((N,N))
+
+#def calcCrossM(self):
+#    ''' calculate crossing matrix '''
+#    #TODO
+#    N = len(self.prng)
+#    self.crossM = np.zeros((N,N))
 
 def addCrossing(prng, i, j):
     '''
@@ -245,7 +247,7 @@ def prng2path(prng):
     for i in range(N):
         if prng.prng[i] < i :
             path[i] = -1
-    return path;
+    return path.astype(int);
 
      
 

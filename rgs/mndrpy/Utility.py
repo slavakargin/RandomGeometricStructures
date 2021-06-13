@@ -13,6 +13,8 @@ import rgs.mndrpy.Pairing as pg
 import rgs.mndrpy.Meander as mr
 import rgs.mndrpy.DyckPaths as dp
 import rgs.mndrpy.Combinatorics as cmb
+
+#from rgs.mndrpy.Meander import Meander
     
    
 
@@ -259,7 +261,7 @@ def main():
     '''
     p = [3, 2, 1, 0, 5, 4]
     q = [1, 0, 3, 2, 5, 4]
-    mndr = mr.Meander(p, q)
+    mndr = Meander(p, q)
     mndr.draw()
     x = dot(p, q)
     print(x)
@@ -313,7 +315,7 @@ def main():
     print("Area of path2 is ", area)  
     
     prng2 = pg.Pairing(path = path2)
-    mndr = mr.Meander(prng1, prng2)
+    mndr = Meander(prng1, prng2)
     mndr.draw(drawCycles=True)
     mr.drawAsPolygon(mndr)
    '''
@@ -323,7 +325,7 @@ def main():
     dp.plotDyckPath(path1)
     area = dp.areaDyckPath(path1)
     print("Area of path1 is ", area)  
-    nvalleys = dp.nvalleysDyckPath(path1)
+    nvalleys = len(dp.valleys(path1))
     print("Number of valleys is ", nvalleys)
     
     n = 4

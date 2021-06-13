@@ -5,8 +5,11 @@ Created on Jan 24, 2020
 '''
 import numpy as np
 import matplotlib.pyplot as plt
+
 import rgs.pmaps.TreeUtility as tu
 from rgs.pmaps.PlanarGraph import PlanarGraph
+
+import rgs.mndrpy.DyckPaths as dp
 
 
 
@@ -315,7 +318,7 @@ def fromLukasiewicz(path):
     '''
     V = len(path)
     #print(path)
-    tr = OrderedTree(V);
+    tr = OrderedTree(V)
     stack = [0] #put root on the stack
     x = 1 #current available vertex
     for i in range(V):
@@ -332,12 +335,32 @@ def fromLukasiewicz(path):
     tr.dfsRename(0)
     return tr
 
-'''
-returns a random simply generated tree on n vertices using the weights in w
-The algorithm works by building a random Lukasiewicz path and converting it to tree
-'''
+
+def fromDyck(path):
+    '''Bilds a planar tree from a Dyck path of 1 and - 1'''
+    V = len(path)//2 + 1
+    tr = OrderedTree(V)
+    unmarked = list(range(V))
+    stack = [0] #put root on stack
+    unmarked.remove(0);
+    for i in range(len(path)):
+        #print("stack = ", stack)
+        #print("unmarked = ", unmarked)
+        if path[i] == 1:
+            v = unmarked[0]
+            unmarked.remove(v)
+            tr.graph.addEdge(stack[-1], v)
+            stack.append(v)
+        else:
+            stack.pop()
+    return tr        
+            
+    
 
 def randomTree(n, w, SEED = 0):
+    '''returns a random simply generated tree on n vertices using the weights in w
+    The algorithm works by building a random Lukasiewicz path and converting it to tree
+    '''
     path = tu.randomLukasiewicz(n, w, SEED = SEED)
     tr = fromLukasiewicz(path) 
     return tr  
@@ -460,7 +483,13 @@ def main():
     print("size of vertex " + str(v) + " is " + str(S))
     
     
+    n = 5
+    seed = 3
+    path = dp.randomDyckPath(n, seed = seed)
+    print("path = ", path)
+    tr = fromDyck(path)
     
+    _, ax = tr.draw(drawLabels = True, block = False)  
     
     plt.show() 
     
